@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { t } from "../../lib/cricket";
 
 interface Props {
-  lang: "en" | "hi";
+  lang: "en" | "hi" | "gu";
   onWallRun: () => void;
   onNeighborsHouse: () => void;
   onDeadBall: () => void;

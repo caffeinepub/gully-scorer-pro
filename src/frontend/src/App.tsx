@@ -4,9 +4,12 @@ import { Toaster } from "@/components/ui/sonner";
 // ============================================================
 import { useCallback, useEffect, useState } from "react";
 import InningsBreak from "./components/InningsBreak";
+import InstallBanner from "./components/InstallBanner";
+import InstallPage from "./components/InstallPage";
 import ResultScreen from "./components/ResultScreen";
 import ScoringScreen from "./components/ScoringScreen";
 import SetupScreen from "./components/SetupScreen";
+import ViewOnlyScreen from "./components/ViewOnlyScreen";
 import {
   clearMatch,
   defaultMatchState,
@@ -16,10 +19,37 @@ import {
 import type { MatchState } from "./types";
 
 export default function App() {
+  // Check if this is a view-only share link
+  const isViewOnly = window.location.hash.startsWith("#match=");
+  if (isViewOnly) {
+    return (
+      <>
+        <ViewOnlyScreen />
+        <Toaster />
+      </>
+    );
+  }
+  return <MainApp />;
+}
+
+function MainApp() {
   const [state, setStateRaw] = useState<MatchState>(() => {
-    // Try to restore a saved match on page load
     return loadMatch() ?? defaultMatchState();
   });
+
+  // Show install page only on first visit (not in standalone/installed mode)
+  const [showInstallPage, setShowInstallPage] = useState(() => {
+    const isStandalone = window.matchMedia(
+      "(display-mode: standalone)",
+    ).matches;
+    const hasDismissed = localStorage.getItem("install_page_dismissed");
+    return !isStandalone && !hasDismissed;
+  });
+
+  const handleEnterApp = () => {
+    localStorage.setItem("install_page_dismissed", "1");
+    setShowInstallPage(false);
+  };
 
   // Persist every state change to localStorage
   const setState = useCallback((newState: MatchState) => {
@@ -37,39 +67,77 @@ export default function App() {
     }
   }, [state.solarMode]);
 
-  // ============================================================
-  // Start 2nd innings
-  // ============================================================
   const startInnings2 = () => {
     setState({
       ...state,
       innings: 2,
       phase: "batting",
-      matchHistory: state.matchHistory, // keep 1st innings history!
+      matchHistory: state.matchHistory,
       currentBatterIndex: 0,
       nonStrikerIndex: 1,
       currentBowlerIndex: 0,
       retiredBatters: [],
-      // Swap teams: team2 bats, team1 bowls
       settings: {
         ...state.settings,
-        players: state.settings.bowlers, // team2 now bats
-        bowlers: state.settings.players, // team1 now bowls
+        // Swap: Team 2 now bats, Team 1 bowls
+        players: state.settings.bowlers,
+        bowlers: state.settings.players,
+        // Preserve canonical arrays for correct scorecard name display
+        team1Players: state.settings.team1Players ?? state.settings.players,
+        team2Players: state.settings.team2Players ?? state.settings.bowlers,
       },
     });
   };
 
-  // ============================================================
-  // New match
-  // ============================================================
+  // New Match — completely fresh start, goes to setup
   const newMatch = () => {
     clearMatch();
     setState(defaultMatchState());
   };
 
-  // ============================================================
-  // Render the correct screen
-  // ============================================================
+  // Quick Match — keeps current settings pre-filled, goes to setup screen
+  const quickMatch = () => {
+    const fresh = defaultMatchState();
+    setState({
+      ...fresh,
+      settings: state.settings,
+      language: state.language,
+      solarMode: state.solarMode,
+      phase: "setup",
+    });
+  };
+
+  // Rematch — same teams & players, immediately starts batting
+  // If innings 2 was played, players/bowlers arrays are swapped — restore them.
+  const rematch = () => {
+    const fresh = defaultMatchState();
+    const team1 = state.settings.team1Players ?? state.settings.players;
+    const team2 = state.settings.team2Players ?? state.settings.bowlers;
+    // Restore: Team 1 bats first again in innings 1
+    const restoredPlayers =
+      state.innings === 2 ? team1 : state.settings.players;
+    const restoredBowlers =
+      state.innings === 2 ? team2 : state.settings.bowlers;
+    setState({
+      ...fresh,
+      settings: {
+        ...state.settings,
+        players: restoredPlayers,
+        bowlers: restoredBowlers,
+        team1Players: team1,
+        team2Players: team2,
+      },
+      language: state.language,
+      solarMode: state.solarMode,
+      phase: "batting",
+      innings: 1,
+    });
+  };
+
+  if (showInstallPage) {
+    return <InstallPage onEnter={handleEnterApp} />;
+  }
+
   return (
     <div className={state.solarMode ? "solar-mode" : ""}>
       {state.phase === "setup" && (
@@ -85,7 +153,13 @@ export default function App() {
       )}
 
       {state.phase === "batting" && (
-        <ScoringScreen state={state} onChange={setState} />
+        <ScoringScreen
+          state={state}
+          onChange={setState}
+          onNewMatch={newMatch}
+          onQuickMatch={quickMatch}
+          onRematch={rematch}
+        />
       )}
 
       {state.phase === "innings_break" && (
@@ -93,9 +167,15 @@ export default function App() {
       )}
 
       {state.phase === "result" && (
-        <ResultScreen state={state} onNewMatch={newMatch} />
+        <ResultScreen
+          state={state}
+          onNewMatch={newMatch}
+          onQuickMatch={quickMatch}
+          onRematch={rematch}
+        />
       )}
 
+      <InstallBanner />
       <Toaster />
     </div>
   );

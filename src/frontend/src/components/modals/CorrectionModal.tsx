@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 // ============================================================
 import { useState } from "react";
 import { t } from "../../lib/cricket";
-import type { BallEvent } from "../../types";
+import type { BallEvent, MatchSettings } from "../../types";
 
 interface Props {
   ball: BallEvent;
   ballIndex: number;
-  lang: "en" | "hi";
+  lang: "en" | "hi" | "gu";
+  settings: MatchSettings;
   onSave: (ball: BallEvent, index: number) => void;
   onClose: () => void;
 }
@@ -19,6 +20,7 @@ export default function CorrectionModal({
   ball,
   ballIndex,
   lang,
+  settings,
   onSave,
   onClose,
 }: Props) {
@@ -29,7 +31,18 @@ export default function CorrectionModal({
   const setWicket = () =>
     setEdited((b) => ({ ...b, runs: 0, isWicket: true, extraType: "none" }));
   const setExtra = (type: BallEvent["extraType"]) =>
-    setEdited((b) => ({ ...b, extraType: type, isWicket: false }));
+    setEdited((b) => ({
+      ...b,
+      extraType: type,
+      isWicket: false,
+      // Auto-fill the extras value when switching to wide/noball
+      extras:
+        type === "wide"
+          ? settings.wideRuns
+          : type === "noball"
+            ? settings.noballRuns
+            : 0,
+    }));
 
   const runBtns = [0, 1, 2, 3, 4, 6];
 

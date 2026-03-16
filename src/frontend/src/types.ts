@@ -24,13 +24,16 @@ export interface BallEvent {
 export interface MatchSettings {
   team1Name: string;
   team2Name: string;
-  players: string[]; // batting team player names (up to playersPerSide)
-  bowlers: string[]; // bowling team player names
+  players: string[]; // batting team player names (current innings)
+  bowlers: string[]; // bowling team player names (current innings)
+  // Canonical arrays — preserved so scorecards always show correct names
+  team1Players?: string[]; // Team 1's batting names (set at match start)
+  team2Players?: string[]; // Team 2's batting names (set at match start)
   maxOvers: number; // e.g., 10
   playersPerSide: number; // default 11
   wideRuns: number; // runs for a wide (default 1)
   noballRuns: number; // runs for a no-ball (default 1)
-  lastManStands: boolean; // allow 10th batter to bat alone
+  lastManStands: boolean; // allow last batter to bat without a partner
 }
 
 /** Derived stats for a single batter */
@@ -77,7 +80,7 @@ export interface MatchState {
   currentBowlerIndex: number;
   innings: 1 | 2;
   phase: "setup" | "batting" | "innings_break" | "result";
-  language: "en" | "hi";
+  language: "en" | "hi" | "gu";
   solarMode: boolean;
   team1FinalRuns?: number;
   team1FinalWickets?: number;
@@ -124,4 +127,8 @@ export type LangKey =
   | "nextBatter"
   | "startInnings2"
   | "matchResult"
-  | "selectBowler";
+  | "selectBowler"
+  | "quickMatch"
+  | "rematch"
+  | "noBallRuns"
+  | "quickStats";

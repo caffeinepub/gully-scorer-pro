@@ -1,0 +1,24 @@
+{
+  "name": "Gully Scorer Pro",
+  "short_name": "GullyScorer",
+  "description": "The ultimate gully cricket scoring app — score like a pro, play like a legend.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#22c55e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/generated/gully-scorer-icon.dim_512x512.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/generated/gully-scorer-icon.dim_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

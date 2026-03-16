@@ -74,12 +74,13 @@ export default function SetupScreen({ state, onStart }: Props) {
         <p className="text-muted-foreground mt-1">Setup your match</p>
       </div>
 
-      <div className="flex gap-2 justify-center mb-6">
+      {/* Language + Solar toggle row */}
+      <div className="flex gap-2 justify-center mb-6 flex-wrap">
         <Button
           size="sm"
           variant={lang === "en" ? "default" : "outline"}
           onClick={() => onStart({ ...state, settings: s, language: "en" })}
-          data-ocid="setup.language_toggle"
+          data-ocid="setup.lang_en_button"
         >
           EN
         </Button>
@@ -87,8 +88,17 @@ export default function SetupScreen({ state, onStart }: Props) {
           size="sm"
           variant={lang === "hi" ? "default" : "outline"}
           onClick={() => onStart({ ...state, settings: s, language: "hi" })}
+          data-ocid="setup.lang_hi_button"
         >
           हि
+        </Button>
+        <Button
+          size="sm"
+          variant={lang === "gu" ? "default" : "outline"}
+          onClick={() => onStart({ ...state, settings: s, language: "gu" })}
+          data-ocid="setup.lang_gu_button"
+        >
+          ગુ
         </Button>
         <Button
           size="sm"
@@ -197,6 +207,11 @@ export default function SetupScreen({ state, onStart }: Props) {
               />
             ))}
           </div>
+        </div>
+
+        {/* Footer credit */}
+        <div className="text-center text-xs text-muted-foreground pt-6 pb-2">
+          Made with ❤️ by vimal for cricket lovers
         </div>
       </div>
 

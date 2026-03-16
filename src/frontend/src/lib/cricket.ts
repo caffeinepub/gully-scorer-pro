@@ -23,6 +23,17 @@ export function recalculateMatch(
 ): MatchCalc {
   const innings = history.filter((b) => b.inningsSide === inningsSide);
 
+  // Use canonical team arrays so innings 1 names are always correct
+  // even after the player/bowler arrays are swapped for innings 2
+  const batterNames =
+    inningsSide === 1
+      ? (settings.team1Players ?? settings.players)
+      : (settings.team2Players ?? settings.players);
+  const bowlerNames =
+    inningsSide === 1
+      ? (settings.team2Players ?? settings.bowlers)
+      : (settings.team1Players ?? settings.bowlers);
+
   let totalRuns = 0;
   let wickets = 0;
   let completedOvers = 0;
@@ -39,7 +50,7 @@ export function recalculateMatch(
     if (!batMap.has(i))
       batMap.set(i, {
         index: i,
-        name: settings.players[i] ?? `Batter ${i + 1}`,
+        name: batterNames[i] ?? `Batter ${i + 1}`,
         runs: 0,
         balls: 0,
         fours: 0,
@@ -55,7 +66,7 @@ export function recalculateMatch(
     if (!bowlMap.has(i))
       bowlMap.set(i, {
         index: i,
-        name: settings.bowlers[i] ?? `Bowler ${i + 1}`,
+        name: bowlerNames[i] ?? `Bowler ${i + 1}`,
         overs: 0,
         balls: 0,
         runs: 0,
@@ -90,7 +101,7 @@ export function recalculateMatch(
       extras.total += ball.extras;
       batter.runs += ball.runs; // noball runs count for batter
       batter.balls++; // noball still counts as batter ball in most gully rules
-      bowler.balls++; // noball counts in bowler's tally
+      bowler.balls++; // noball counts in bowler's tally (but not legal delivery)
       // noball does NOT count as a legal delivery
     } else {
       // Normal ball
@@ -120,13 +131,13 @@ export function recalculateMatch(
   // Compute strike rates and economy
   const batterStats = Array.from(batMap.values()).map((b) => ({
     ...b,
-    name: settings.players[b.index] ?? `Batter ${b.index + 1}`,
+    name: batterNames[b.index] ?? `Batter ${b.index + 1}`,
     strikeRate: b.balls > 0 ? Math.round((b.runs / b.balls) * 100) : 0,
   }));
 
   const bowlerStats = Array.from(bowlMap.values()).map((b) => ({
     ...b,
-    name: settings.bowlers[b.index] ?? `Bowler ${b.index + 1}`,
+    name: bowlerNames[b.index] ?? `Bowler ${b.index + 1}`,
     overs: Math.floor(b.balls / 6),
     economy: b.balls > 0 ? Math.round((b.runs / (b.balls / 6)) * 10) / 10 : 0,
   }));
@@ -156,7 +167,7 @@ export function vibrate(type: "run" | "wicket" | "boundary") {
 }
 
 // ============================================================
-// TRANSLATIONS — English and Hindi
+// TRANSLATIONS — English, Hindi, and Gujarati
 // To add more languages, copy one block and translate
 // ============================================================
 export const translations: Record<string, Record<string, string>> = {
@@ -181,6 +192,8 @@ export const translations: Record<string, Record<string, string>> = {
     share: "Share",
     lastManStands: "Last Man Stands!",
     newMatch: "New Match",
+    quickMatch: "Quick Match",
+    rematch: "Rematch",
     target: "Target",
     won: "won!",
     startMatch: "Start Match",
@@ -222,6 +235,8 @@ export const translations: Record<string, Record<string, string>> = {
     w: "W",
     eco: "Eco",
     startInnings: "Start Innings",
+    noBallRuns: "Runs off No Ball",
+    quickStats: "Quick Stats",
   },
   hi: {
     appName: "गली स्कोरर प्रो",
@@ -244,6 +259,8 @@ export const translations: Record<string, Record<string, string>> = {
     share: "शेयर",
     lastManStands: "लास्ट मैन!",
     newMatch: "नया मैच",
+    quickMatch: "त्वरित मैच",
+    rematch: "रीमैच",
     target: "लक्ष्य",
     won: "जीता!",
     startMatch: "मैच शुरू",
@@ -285,10 +302,79 @@ export const translations: Record<string, Record<string, string>> = {
     w: "वि",
     eco: "इको",
     startInnings: "पारी शुरू",
+    noBallRuns: "नो बॉल पर रन",
+    quickStats: "त्वरित आँकड़े",
+  },
+  gu: {
+    appName: "ગલ્લી સ્કોરર પ્રો",
+    runs: "રન",
+    wickets: "વિકેટ",
+    overs: "ઓવર",
+    striker: "સ્ટ્રાઇકર ★",
+    nonStriker: "નોન-સ્ટ્રાઇકર",
+    bowler: "બોલર",
+    undo: "પૂર્વવત",
+    swap: "સ્વૅપ",
+    rules: "નિયમ",
+    wide: "વાઇડ",
+    noball: "નો બૉલ",
+    out: "આઉટ",
+    wallRuns: "દીવાલ રન +1",
+    neighborsHouse: "પડોશીનું ઘર",
+    deadBall: "ડેડ બૉલ",
+    settings: "સેટિંગ્સ",
+    share: "શૅર",
+    lastManStands: "છેલ્લો માણસ!",
+    newMatch: "નવી મૅચ",
+    quickMatch: "ઝડપી મૅચ",
+    rematch: "રિમૅચ",
+    target: "લક્ષ્ય",
+    won: "જીત્યા!",
+    startMatch: "મૅચ શરૂ",
+    innings1: "પ્રથમ દાવ",
+    innings2: "બીજો દાવ",
+    editName: "નવું નામ દાખલ કરો:",
+    extras: "એક્સ્ટ્રા",
+    scorecard: "સ્કોરકાર્ડ",
+    topBatter: "ટોપ બેટ્સમૅન",
+    topBowler: "ટોપ બોલર",
+    correction: "બૉલ સંપાદિત કરો",
+    save: "સેવ",
+    cancel: "રદ",
+    selectBatter: "આગળનો બેટ્સમૅન પસંદ કરો",
+    nextBatter: "આગળનો બેટ્સમૅન",
+    startInnings2: "બીજો દાવ શરૂ",
+    matchResult: "મૅચ પરિણામ",
+    selectBowler: "આગળના ઓવર માટે બોલર પસંદ કરો",
+    solarMode: "સોલર મોડ",
+    language: "ભાષા",
+    maxOvers: "મહત્તમ ઓવર",
+    playersPerSide: "ટીમ દીઠ ખેલાડી",
+    wideRuns: "વાઇડ રન",
+    noballRuns: "નો-બૉલ રન",
+    team1: "ટીમ ૧",
+    team2: "ટીમ ૨",
+    totalExtras: "કુલ એક્સ્ટ્રા",
+    matchSummary: "મૅચ સારાંશ",
+    shareWhatsApp: "WhatsApp પર શૅર",
+    download: "ડાઉનલોડ",
+    batting: "બૅટિંગ",
+    bowling: "બૉલિંગ",
+    batter: "બેટ્સમૅન",
+    r: "ર",
+    b: "બ",
+    sr: "SR",
+    bowl: "બોલર",
+    o: "ઓ",
+    w: "વિ",
+    eco: "ઇકો",
+    startInnings: "દાવ શરૂ",
+    noBallRuns: "નો બૉલ પર રન",
+    quickStats: "ઝડપી આંકડા",
   },
 };
 
-export function t(lang: "en" | "hi", key: string): string {
+export function t(lang: "en" | "hi" | "gu", key: string): string {
   return translations[lang]?.[key] ?? translations.en[key] ?? key;
 }
 
@@ -300,13 +386,33 @@ export function uid(): string {
 }
 
 // ============================================================
+// Safe base64 encode/decode that handles Unicode (Hindi/Gujarati)
+// ============================================================
+export function encodeMatchState(state: unknown): string {
+  try {
+    const json = JSON.stringify(state);
+    // encodeURIComponent -> percent-encode UTF-8 chars, unescape -> latin1 bytes
+    return btoa(unescape(encodeURIComponent(json)));
+  } catch {
+    return "";
+  }
+}
+
+export function decodeMatchState(encoded: string): unknown | null {
+  try {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+// ============================================================
 // Check if innings is over
 // Returns: 'overs' | 'allout' | null
-// NOTE: Both lastManStands branches result in the same wicket
-// threshold (playersPerSide - 1). This is intentional — the
-// "last man stands" difference is handled in WicketModal, which
-// allows the final batter to continue without a partner rather
-// than forcing innings end at that point.
+// lastManStands = true: innings ends when ALL batters are out
+// (no partner needed for the last batter)
+// lastManStands = false: innings ends when playersPerSide - 1 wickets fall
 // ============================================================
 export function checkInningsEnd(
   calc: MatchCalc,
@@ -315,10 +421,10 @@ export function checkInningsEnd(
   const maxLegalBalls = settings.maxOvers * 6;
   const legalBallsBowled = calc.completedOvers * 6 + calc.currentBall;
   if (legalBallsBowled >= maxLegalBalls) return "overs";
-  // Both modes end at playersPerSide - 1 wickets; last-man-stands
-  // UI difference is in WicketModal (shows "last man" scenario).
+  // lastManStands: all players must be out (full playersPerSide wickets)
+  // normal mode: innings ends at playersPerSide - 1 wickets
   const maxWickets = settings.lastManStands
-    ? settings.playersPerSide - 1
+    ? settings.playersPerSide
     : settings.playersPerSide - 1;
   if (calc.wickets >= maxWickets) return "allout";
   return null;

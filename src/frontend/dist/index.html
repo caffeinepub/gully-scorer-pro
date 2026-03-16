@@ -1,12 +1,47 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <script type="module" crossorigin src="/assets/index-DjSL1VlT.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BoHwod3O.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Gully Scorer Pro – #1 Gully Cricket Scoring App</title>
+    <meta name="description" content="The ultimate gully cricket scoring app. Ball-by-ball scoring, offline mode, Solar Mode, WhatsApp sharing. Free forever. Install now!" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#22c55e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="GullyScorer" />
+    <link rel="apple-touch-icon" href="/assets/generated/gully-scorer-icon.dim_512x512.png" />
+
+    <!-- Open Graph – rich preview on WhatsApp, iMessage, Telegram -->
+    <meta property="og:title" content="🏏 Gully Scorer Pro – Score Like a Pro!" />
+    <meta property="og:description" content="Free cricket scoring app. Works offline, Solar Mode, WhatsApp scorecards. Install in seconds – no sign-up needed!" />
+    <meta property="og:image" content="/assets/generated/gully-scorer-share-banner.dim_1200x630.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gully Scorer Pro" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="🏏 Gully Scorer Pro – Score Like a Pro!" />
+    <meta name="twitter:description" content="Free cricket scoring app. Works offline, Solar Mode, WhatsApp scorecards. Install in seconds!" />
+    <meta name="twitter:image" content="/assets/generated/gully-scorer-share-banner.dim_1200x630.jpg" />
+    <script type="module" crossorigin src="/assets/index-DWYgwOBJ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Cq55wlne.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

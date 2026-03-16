@@ -11,7 +11,7 @@ import { t } from "../../lib/cricket";
 import type { MatchSettings } from "../../types";
 
 interface Props {
-  lang: "en" | "hi";
+  lang: "en" | "hi" | "gu";
   settings: MatchSettings;
   onSave: (s: MatchSettings) => void;
   onClose: () => void;

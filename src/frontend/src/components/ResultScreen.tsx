@@ -11,9 +11,16 @@ import ShareModal from "./modals/ShareModal";
 interface Props {
   state: MatchState;
   onNewMatch: () => void;
+  onQuickMatch: () => void;
+  onRematch: () => void;
 }
 
-export default function ResultScreen({ state, onNewMatch }: Props) {
+export default function ResultScreen({
+  state,
+  onNewMatch,
+  onQuickMatch,
+  onRematch,
+}: Props) {
   const lang = state.language;
   const [showShare, setShowShare] = useState(false);
 
@@ -39,7 +46,7 @@ export default function ResultScreen({ state, onNewMatch }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-24">
+    <div className="min-h-screen bg-background text-foreground pb-32">
       {/* Result banner */}
       <div className="bg-primary text-primary-foreground text-center py-6 px-4">
         <div className="text-4xl mb-2">🏆</div>
@@ -91,7 +98,6 @@ export default function ResultScreen({ state, onNewMatch }: Props) {
             </TabsTrigger>
           </TabsList>
 
-          {/* Bug 4: Use React.Fragment with explicit key instead of bare fragments */}
           {[1, 2].map((inn) => (
             <React.Fragment key={inn}>
               <TabsContent value={`bat${inn}`}>
@@ -166,25 +172,53 @@ export default function ResultScreen({ state, onNewMatch }: Props) {
         </Tabs>
       </div>
 
+      {/* Footer credit */}
+      <div className="text-center text-xs text-muted-foreground pt-4 pb-2 px-4">
+        Made with ❤️ by vimal for cricket lovers
+      </div>
+
       {/* Action buttons */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-2">
-        <Button
-          size="lg"
-          variant="outline"
-          className="flex-1 h-14 font-bold"
-          onClick={() => setShowShare(true)}
-          data-ocid="result.share_button"
-        >
-          📤 {t(lang, "share")}
-        </Button>
-        <Button
-          size="lg"
-          className="flex-1 h-14 font-bold"
-          onClick={onNewMatch}
-          data-ocid="result.new_match_button"
-        >
-          🏏 {t(lang, "newMatch")}
-        </Button>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
+        <div className="flex gap-2 mb-2">
+          <Button
+            size="lg"
+            variant="outline"
+            className="flex-1 h-14 font-bold"
+            onClick={() => setShowShare(true)}
+            data-ocid="result.share_button"
+          >
+            📤 {t(lang, "share")}
+          </Button>
+          <Button
+            size="lg"
+            variant="default"
+            className="flex-1 h-14 font-bold bg-green-600 hover:bg-green-700"
+            onClick={onRematch}
+            data-ocid="result.rematch_button"
+          >
+            🔄 {t(lang, "rematch")}
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="flex-1 h-10 font-bold text-xs"
+            onClick={onQuickMatch}
+            data-ocid="result.quick_match_button"
+          >
+            ⚡ {t(lang, "quickMatch")}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="flex-1 h-10 font-bold text-xs"
+            onClick={onNewMatch}
+            data-ocid="result.new_match_button"
+          >
+            🏏 {t(lang, "newMatch")}
+          </Button>
+        </div>
       </div>
 
       {showShare && (

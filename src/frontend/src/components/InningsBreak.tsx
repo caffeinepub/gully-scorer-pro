@@ -45,6 +45,9 @@ export default function InningsBreak({ state, onStartInnings2 }: Props) {
       >
         🏏 {t(lang, "startInnings2")}
       </Button>
+      <p className="text-xs text-muted-foreground mt-8">
+        Made with ❤️ by vimal for cricket lovers
+      </p>
     </div>
   );
 }
