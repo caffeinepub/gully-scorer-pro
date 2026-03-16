@@ -1,0 +1,228 @@
+/* ============================================================
+   GULLY SCORER PRO — Global Styles
+   To change the app's color scheme, modify the OKLCH values below.
+   L = Lightness (0–1), C = Chroma (0–0.4), H = Hue (0–360)
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import sporty font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* --- Dark Cricket Theme (default) ---
+       Primary green = cricket field / pitch
+       Accent orange = energy / excitement  */
+    --background: 0.14 0.01 260;         /* deep dark blue-gray */
+    --foreground: 0.96 0.01 100;         /* near-white text */
+    --card: 0.18 0.01 260;              /* slightly lighter card */
+    --card-foreground: 0.96 0.01 100;
+    --popover: 0.18 0.01 260;
+    --popover-foreground: 0.96 0.01 100;
+    --primary: 0.75 0.2 145;            /* cricket green */
+    --primary-foreground: 0.12 0.01 145;
+    --secondary: 0.22 0.01 260;
+    --secondary-foreground: 0.85 0.01 100;
+    --muted: 0.20 0.01 260;
+    --muted-foreground: 0.60 0.01 260;
+    --accent: 0.72 0.19 45;             /* bright orange accent */
+    --accent-foreground: 0.10 0.01 45;
+    --destructive: 0.62 0.22 25;        /* red for OUT/wickets */
+    --destructive-foreground: 0.98 0.01 25;
+    --border: 0.28 0.02 260;
+    --input: 0.28 0.02 260;
+    --ring: 0.75 0.2 145;
+    --radius: 0.75rem;
+
+    /* Chart colors */
+    --chart-1: 0.75 0.2 145;
+    --chart-2: 0.72 0.19 45;
+    --chart-3: 0.65 0.22 25;
+    --chart-4: 0.70 0.18 200;
+    --chart-5: 0.78 0.15 300;
+
+    /* Sidebar */
+    --sidebar: 0.14 0.01 260;
+    --sidebar-foreground: 0.96 0.01 100;
+    --sidebar-primary: 0.75 0.2 145;
+    --sidebar-primary-foreground: 0.12 0.01 145;
+    --sidebar-accent: 0.22 0.01 260;
+    --sidebar-accent-foreground: 0.85 0.01 100;
+    --sidebar-border: 0.28 0.02 260;
+    --sidebar-ring: 0.75 0.2 145;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Barlow', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+  h1, h2, h3 {
+    font-family: 'Barlow Condensed', system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* ============================================================
+   SOLAR MODE — Yellow on Black for outdoor use
+   Toggle by adding .solar-mode to <html> or root div
+   Change colors here to customize solar mode appearance
+   ============================================================ */
+.solar-mode {
+  --background: 0.08 0 0;              /* pure black */
+  --foreground: 0.92 0.18 90;         /* bright yellow */
+  --card: 0.10 0 0;                   /* near-black cards */
+  --card-foreground: 0.92 0.18 90;
+  --popover: 0.10 0 0;
+  --popover-foreground: 0.92 0.18 90;
+  --primary: 0.88 0.20 90;            /* vivid yellow-green */
+  --primary-foreground: 0.08 0 0;
+  --secondary: 0.15 0 0;
+  --secondary-foreground: 0.88 0.18 90;
+  --muted: 0.14 0 0;
+  --muted-foreground: 0.65 0.10 90;
+  --accent: 0.92 0.22 90;             /* solar yellow */
+  --accent-foreground: 0.08 0 0;
+  --destructive: 0.65 0.28 25;        /* red stays red */
+  --destructive-foreground: 0.98 0 0;
+  --border: 0.25 0.12 90;
+  --input: 0.25 0.12 90;
+  --ring: 0.88 0.20 90;
+}
+
+/* ============================================================
+   SCORING BUTTONS — The chunky thumb-zone buttons
+   Increase min-height to make buttons larger
+   ============================================================ */
+.score-btn {
+  min-height: 64px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.score-btn:active {
+  transform: scale(0.95);
+}
+
+/* OUT button — always red, high contrast */
+.score-btn-out {
+  background: oklch(0.62 0.22 25) !important;
+  color: white !important;
+  border-color: oklch(0.62 0.22 25) !important;
+}
+.solar-mode .score-btn-out {
+  background: oklch(0.55 0.28 25) !important;
+  border: 2px solid oklch(0.80 0.28 25) !important;
+}
+
+/* BOUNDARY buttons — 4 = blue, 6 = purple */
+.score-btn-four { background: oklch(0.55 0.15 245) !important; color: white !important; }
+.score-btn-six  { background: oklch(0.50 0.20 300) !important; color: white !important; }
+.solar-mode .score-btn-four { background: oklch(0.45 0.20 245) !important; border: 2px solid oklch(0.75 0.20 245) !important; }
+.solar-mode .score-btn-six  { background: oklch(0.40 0.24 300) !important; border: 2px solid oklch(0.75 0.24 300) !important; }
+
+/* ============================================================
+   BALL TIMELINE CHIPS
+   ============================================================ */
+.ball-chip {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.1s ease;
+  border: 2px solid transparent;
+}
+.ball-chip:hover { transform: scale(1.1); }
+.ball-chip-dot   { background: oklch(0.25 0.01 260); color: oklch(0.70 0.01 260); border-color: oklch(0.35 0.01 260); }
+.ball-chip-run   { background: oklch(0.28 0.04 145); color: oklch(0.85 0.15 145); border-color: oklch(0.50 0.12 145); }
+.ball-chip-four  { background: oklch(0.22 0.10 245); color: oklch(0.80 0.18 245); border-color: oklch(0.50 0.18 245); }
+.ball-chip-six   { background: oklch(0.22 0.12 300); color: oklch(0.80 0.22 300); border-color: oklch(0.50 0.22 300); }
+.ball-chip-wicket{ background: oklch(0.22 0.14 25);  color: oklch(0.85 0.22 25);  border-color: oklch(0.55 0.22 25); }
+.ball-chip-extra { background: oklch(0.24 0.10 60);  color: oklch(0.85 0.18 60);  border-color: oklch(0.50 0.18 60); }
+
+/* Solar mode ball chips */
+.solar-mode .ball-chip-dot    { background: oklch(0.12 0 0); color: oklch(0.55 0.15 90); border-color: oklch(0.35 0.10 90); }
+.solar-mode .ball-chip-run    { background: oklch(0.14 0 0); color: oklch(0.90 0.22 90); border-color: oklch(0.60 0.20 90); }
+.solar-mode .ball-chip-wicket { background: oklch(0.14 0 0); color: oklch(0.80 0.28 25); border-color: oklch(0.55 0.28 25); }
+
+/* ============================================================
+   THUMB ZONE — Fixed bottom panel
+   Change padding-bottom if it overlaps with phone nav bar
+   ============================================================ */
+.thumb-zone {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 8px 8px 16px;
+  background: oklch(var(--background));
+  border-top: 1px solid oklch(var(--border));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* ============================================================
+   SCORE DISPLAY — The big number at the top
+   ============================================================ */
+.score-display {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   PLAYER CARD — Batter/Bowler info cards
+   ============================================================ */
+.player-name-btn {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s;
+}
+.player-name-btn:hover { opacity: 0.75; }
+
+/* Animations */
+@keyframes scoreFlash {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+.score-flash { animation: scoreFlash 0.3s ease-out; }
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeSlideUp 0.25s ease-out; }
+
+/* Prevent body scroll when modal open */
+body.modal-open { overflow: hidden; }
+
+/* Scrollbar for timeline */
+.timeline-scroll::-webkit-scrollbar { height: 4px; }
+.timeline-scroll::-webkit-scrollbar-track { background: transparent; }
+.timeline-scroll::-webkit-scrollbar-thumb { background: oklch(var(--border)); border-radius: 2px; }
