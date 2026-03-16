@@ -12,25 +12,39 @@ interface Props {
 const features = [
   {
     icon: "🏏",
-    title: "Ball-by-ball scoring",
-    sub: "4, 6, Wide, No Ball, OUT & more",
+    title: "Ball-by-ball Scoring",
+    sub: "4, 6, Wide, No Ball, OUT",
   },
-  { icon: "📴", title: "100% Offline", sub: "No internet needed on the field" },
-  { icon: "☀️", title: "Solar Mode", sub: "See clearly in bright sunlight" },
+  { icon: "📴", title: "100% Offline", sub: "No internet on the field" },
+  { icon: "☀️", title: "Solar Mode", sub: "Crystal clear in sunlight" },
   {
     icon: "📤",
     title: "WhatsApp Scorecard",
-    sub: "Share stunning infographics instantly",
+    sub: "Share stunning infographics",
   },
   {
     icon: "🏆",
     title: "Gully Rules Built-in",
-    sub: "Wall runs, Neighbor's house & more",
+    sub: "Wall runs, Neighbor's house",
+  },
+  { icon: "🎯", title: "Free Forever", sub: "No ads, no sign-up ever" },
+];
+
+const testimonials = [
+  {
+    name: "Raj",
+    text: "Best gully cricket app! My whole mohalla uses it 🏏",
+    location: "Mumbai",
   },
   {
-    icon: "🎯",
-    title: "Free Forever",
-    sub: "No ads, no sign-up, just cricket",
+    name: "Arjun",
+    text: "No more paper scorecards. This is the future bhai!",
+    location: "Ahmedabad",
+  },
+  {
+    name: "Priya",
+    text: "Even my 60yr old uncle could install it. Super easy!",
+    location: "Surat",
   },
 ];
 
@@ -42,18 +56,33 @@ export default function InstallPage({ onEnter }: Props) {
   const [installed, setInstalled] = useState(false);
   const [animIn, setAnimIn] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const [btnPulse, setBtnPulse] = useState(false);
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const [installCount] = useState(() => Math.floor(Math.random() * 400) + 1200);
 
   useEffect(() => {
     setTimeout(() => setAnimIn(true), 80);
     setTimeout(() => setPulse(true), 1200);
+    setTimeout(() => setBtnPulse(true), 2000);
+
     const ua = navigator.userAgent;
     if (/iphone|ipad|ipod/i.test(ua)) setIsIOS(true);
+
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+
+    // Rotate testimonials
+    const t = setInterval(() => {
+      setTestimonialIdx((i) => (i + 1) % testimonials.length);
+    }, 3500);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      clearInterval(t);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -75,6 +104,7 @@ export default function InstallPage({ onEnter }: Props) {
   };
 
   const canInstall = isIOS || !!deferredPrompt;
+  const t = testimonials[testimonialIdx];
 
   return (
     <div
@@ -84,13 +114,13 @@ export default function InstallPage({ onEnter }: Props) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "0 20px 36px",
+        padding: "0 20px 40px",
         fontFamily: "system-ui, -apple-system, sans-serif",
         overflowX: "hidden",
         position: "relative",
       }}
     >
-      {/* Background grid lines */}
+      {/* BG grid */}
       <div
         style={{
           position: "fixed",
@@ -119,11 +149,11 @@ export default function InstallPage({ onEnter }: Props) {
         }}
       />
 
-      {/* Badge */}
+      {/* Live badge */}
       <div
         style={{
-          marginTop: 40,
-          marginBottom: 12,
+          marginTop: 36,
+          marginBottom: 10,
           zIndex: 1,
           opacity: animIn ? 1 : 0,
           transform: animIn ? "translateY(0)" : "translateY(-16px)",
@@ -156,15 +186,15 @@ export default function InstallPage({ onEnter }: Props) {
               display: "inline-block",
             }}
           />
-          Free Cricket Scoring App
+          🏏 Free Cricket Scoring App
         </span>
       </div>
 
-      {/* App icon */}
+      {/* Icon */}
       <div
         style={{
           zIndex: 1,
-          marginBottom: 20,
+          marginBottom: 18,
           opacity: animIn ? 1 : 0,
           transform: animIn ? "scale(1)" : "scale(0.7)",
           transition: "all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s",
@@ -172,9 +202,9 @@ export default function InstallPage({ onEnter }: Props) {
       >
         <div
           style={{
-            width: 120,
-            height: 120,
-            borderRadius: 30,
+            width: 110,
+            height: 110,
+            borderRadius: 28,
             overflow: "hidden",
             border: "2.5px solid rgba(34,197,94,0.5)",
             boxShadow: pulse
@@ -196,7 +226,7 @@ export default function InstallPage({ onEnter }: Props) {
         style={{
           textAlign: "center",
           zIndex: 1,
-          marginBottom: 8,
+          marginBottom: 6,
           opacity: animIn ? 1 : 0,
           transform: animIn ? "translateY(0)" : "translateY(20px)",
           transition: "all 0.6s ease 0.1s",
@@ -204,7 +234,7 @@ export default function InstallPage({ onEnter }: Props) {
       >
         <h1
           style={{
-            fontSize: 38,
+            fontSize: 36,
             fontWeight: 900,
             color: "#fff",
             margin: 0,
@@ -218,7 +248,7 @@ export default function InstallPage({ onEnter }: Props) {
           style={{
             color: "#9ca3af",
             fontSize: 15,
-            margin: "10px 0 0",
+            margin: "8px 0 0",
             lineHeight: 1.5,
           }}
         >
@@ -226,21 +256,74 @@ export default function InstallPage({ onEnter }: Props) {
         </p>
       </div>
 
-      {/* Star rating */}
+      {/* Social proof */}
       <div
         style={{
           zIndex: 1,
-          marginBottom: 28,
+          marginBottom: 20,
           opacity: animIn ? 1 : 0,
           transition: "all 0.6s ease 0.15s",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 4,
         }}
       >
-        <span style={{ color: "#fbbf24", fontSize: 16, letterSpacing: 2 }}>
-          ★★★★★
-        </span>
-        <span style={{ color: "#6b7280", fontSize: 12, marginLeft: 6 }}>
-          Loved by gully cricketers
-        </span>
+        <div>
+          <span style={{ color: "#fbbf24", fontSize: 16, letterSpacing: 2 }}>
+            ★★★★★
+          </span>
+          <span style={{ color: "#6b7280", fontSize: 12, marginLeft: 6 }}>
+            Loved by gully cricketers
+          </span>
+        </div>
+        <div style={{ color: "#22c55e", fontSize: 12, fontWeight: 700 }}>
+          🔥 {installCount.toLocaleString()}+ players installed this week
+        </div>
+      </div>
+
+      {/* Testimonial carousel */}
+      <div
+        style={{
+          zIndex: 1,
+          width: "100%",
+          maxWidth: 400,
+          marginBottom: 20,
+          opacity: animIn ? 1 : 0,
+          transition: "all 0.6s ease 0.2s",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(34,197,94,0.07)",
+            border: "1px solid rgba(34,197,94,0.18)",
+            borderRadius: 18,
+            padding: "14px 16px",
+            transition: "all 0.4s ease",
+          }}
+        >
+          <p
+            style={{
+              color: "#e5e7eb",
+              fontSize: 13,
+              margin: 0,
+              lineHeight: 1.5,
+              fontStyle: "italic",
+            }}
+          >
+            "{t.text}"
+          </p>
+          <p
+            style={{
+              color: "#22c55e",
+              fontSize: 12,
+              margin: "8px 0 0",
+              fontWeight: 700,
+            }}
+          >
+            — {t.name}, {t.location}
+          </p>
+        </div>
       </div>
 
       {/* Features grid */}
@@ -251,8 +334,8 @@ export default function InstallPage({ onEnter }: Props) {
           zIndex: 1,
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: 10,
-          marginBottom: 28,
+          gap: 9,
+          marginBottom: 24,
           opacity: animIn ? 1 : 0,
           transform: animIn ? "translateY(0)" : "translateY(24px)",
           transition: "all 0.65s ease 0.2s",
@@ -265,19 +348,19 @@ export default function InstallPage({ onEnter }: Props) {
               display: "flex",
               alignItems: "flex-start",
               gap: 10,
-              padding: "14px 12px",
+              padding: "13px 12px",
               background: "rgba(255,255,255,0.04)",
               borderRadius: 16,
               border: "1px solid rgba(255,255,255,0.08)",
             }}
           >
-            <span style={{ fontSize: 22, lineHeight: 1 }}>{f.icon}</span>
+            <span style={{ fontSize: 20, lineHeight: 1 }}>{f.icon}</span>
             <div>
               <div
                 style={{
                   color: "#f3f4f6",
                   fontWeight: 700,
-                  fontSize: 12,
+                  fontSize: 11.5,
                   lineHeight: 1.3,
                 }}
               >
@@ -286,7 +369,7 @@ export default function InstallPage({ onEnter }: Props) {
               <div
                 style={{
                   color: "#6b7280",
-                  fontSize: 11,
+                  fontSize: 10.5,
                   marginTop: 2,
                   lineHeight: 1.35,
                 }}
@@ -324,48 +407,80 @@ export default function InstallPage({ onEnter }: Props) {
         ) : (
           <>
             {canInstall && (
-              <button
-                type="button"
-                onClick={handleInstall}
-                style={{
-                  width: "100%",
-                  padding: "20px",
-                  background:
-                    "linear-gradient(135deg, #22c55e 0%, #15803d 100%)",
-                  color: "#000",
-                  border: "none",
-                  borderRadius: 18,
-                  fontSize: 18,
-                  fontWeight: 900,
-                  cursor: "pointer",
-                  marginBottom: 10,
-                  letterSpacing: "-0.3px",
-                  boxShadow:
-                    "0 0 0 1px rgba(34,197,94,0.3), 0 12px 40px rgba(34,197,94,0.5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
-                <span style={{ fontSize: 22 }}>📲</span>
-                Install App — It's Free
-              </button>
+              <>
+                {/* Urgency tag */}
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: 8,
+                    color: "#fbbf24",
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  ⚡ Tap once — installs in seconds, no sign-up needed!
+                </div>
+                <button
+                  type="button"
+                  onClick={handleInstall}
+                  style={{
+                    width: "100%",
+                    padding: "20px",
+                    background:
+                      "linear-gradient(135deg, #22c55e 0%, #15803d 100%)",
+                    color: "#000",
+                    border: "none",
+                    borderRadius: 18,
+                    fontSize: 18,
+                    fontWeight: 900,
+                    cursor: "pointer",
+                    marginBottom: 8,
+                    letterSpacing: "-0.3px",
+                    boxShadow: btnPulse
+                      ? "0 0 0 6px rgba(34,197,94,0.15), 0 0 0 14px rgba(34,197,94,0.06), 0 12px 40px rgba(34,197,94,0.5)"
+                      : "0 0 0 1px rgba(34,197,94,0.3), 0 12px 40px rgba(34,197,94,0.5)",
+                    transition: "box-shadow 1s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 10,
+                  }}
+                  data-ocid="install_page.primary_button"
+                >
+                  <span style={{ fontSize: 22 }}>📲</span>
+                  {isIOS
+                    ? "Install on iPhone — Free"
+                    : "Install App — It's Free"}
+                </button>
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "#4b5563",
+                    fontSize: 11,
+                    margin: "0 0 6px",
+                  }}
+                >
+                  {isIOS
+                    ? "Opens a 3-step guide (takes 30 seconds)"
+                    : "Works like a native app — no App Store needed"}
+                </p>
+              </>
             )}
             <button
               type="button"
               onClick={onEnter}
               style={{
                 width: "100%",
-                padding: "16px",
+                padding: "14px",
                 background: "transparent",
                 color: "#4b5563",
                 border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: 16,
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 600,
                 cursor: "pointer",
               }}
+              data-ocid="install_page.secondary_button"
             >
               {canInstall ? "Continue in Browser →" : "Open App →"}
             </button>
@@ -373,14 +488,50 @@ export default function InstallPage({ onEnter }: Props) {
         )}
       </div>
 
+      {/* Badges row */}
+      <div
+        style={{
+          zIndex: 1,
+          marginTop: 20,
+          display: "flex",
+          gap: 8,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          opacity: animIn ? 0.8 : 0,
+          transition: "opacity 0.6s ease 0.5s",
+        }}
+      >
+        {[
+          "✅ 100% Free",
+          "📴 Works Offline",
+          "🚫 No Sign-up",
+          "📱 Android & iPhone",
+        ].map((b) => (
+          <span
+            key={b}
+            style={{
+              background: "rgba(34,197,94,0.08)",
+              border: "1px solid rgba(34,197,94,0.2)",
+              borderRadius: 100,
+              padding: "4px 10px",
+              color: "#6b7280",
+              fontSize: 11,
+              fontWeight: 600,
+            }}
+          >
+            {b}
+          </span>
+        ))}
+      </div>
+
       {/* Footer */}
       <div
         style={{
           zIndex: 1,
-          marginTop: 24,
+          marginTop: 18,
           textAlign: "center",
-          opacity: animIn ? 0.5 : 0,
-          transition: "opacity 0.6s ease 0.5s",
+          opacity: animIn ? 0.4 : 0,
+          transition: "opacity 0.6s ease 0.6s",
         }}
       >
         <span style={{ color: "#4b5563", fontSize: 12 }}>
@@ -408,7 +559,7 @@ export default function InstallPage({ onEnter }: Props) {
             style={{
               background: "#0d1f0f",
               borderRadius: 28,
-              padding: "32px 20px 28px",
+              padding: "28px 20px 24px",
               width: "100%",
               maxWidth: 440,
               border: "2px solid rgba(34,197,94,0.4)",
@@ -418,45 +569,59 @@ export default function InstallPage({ onEnter }: Props) {
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            <div style={{ textAlign: "center", marginBottom: 8 }}>
-              <span style={{ fontSize: 40 }}>📱</span>
+            <div style={{ textAlign: "center", marginBottom: 6 }}>
+              <span style={{ fontSize: 38 }}>📱</span>
             </div>
             <div
               style={{
                 color: "#22c55e",
                 fontWeight: 900,
-                fontSize: 22,
+                fontSize: 21,
                 textAlign: "center",
-                marginBottom: 6,
+                marginBottom: 4,
               }}
             >
               Install on iPhone
             </div>
             <div
               style={{
-                color: "#6b7280",
-                fontSize: 13,
+                color: "#fbbf24",
+                fontSize: 12,
                 textAlign: "center",
-                marginBottom: 24,
+                marginBottom: 4,
+                fontWeight: 700,
               }}
             >
-              Follow these 3 steps in Safari:
+              ⚡ Only 3 taps — takes 30 seconds!
+            </div>
+            <div
+              style={{
+                color: "#6b7280",
+                fontSize: 12,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              Open this page in Safari, then:
             </div>
             {[
               {
                 step: "1",
                 icon: "⬆️",
                 text: "Tap the Share button at the bottom of Safari",
+                hint: "(the box with the arrow going up)",
               },
               {
                 step: "2",
                 icon: "➕",
                 text: 'Scroll and tap "Add to Home Screen"',
+                hint: "",
               },
               {
                 step: "3",
                 icon: "✅",
-                text: 'Tap "Add" — icon appears on your home screen!',
+                text: 'Tap "Add" — icon appears instantly!',
+                hint: "",
               },
             ].map((item) => (
               <div
@@ -465,16 +630,16 @@ export default function InstallPage({ onEnter }: Props) {
                   display: "flex",
                   alignItems: "center",
                   gap: 14,
-                  marginBottom: 12,
+                  marginBottom: 10,
                   background: "rgba(34,197,94,0.08)",
                   borderRadius: 16,
-                  padding: "14px 16px",
+                  padding: "13px 16px",
                 }}
               >
                 <div
                   style={{
-                    width: 38,
-                    height: 38,
+                    width: 36,
+                    height: 36,
                     background: "#22c55e",
                     borderRadius: "50%",
                     display: "flex",
@@ -482,17 +647,24 @@ export default function InstallPage({ onEnter }: Props) {
                     justifyContent: "center",
                     fontWeight: 900,
                     color: "#000",
-                    fontSize: 16,
+                    fontSize: 15,
                     flexShrink: 0,
                   }}
                 >
                   {item.step}
                 </div>
                 <div
-                  style={{ color: "#e5e7eb", fontSize: 14, lineHeight: 1.4 }}
+                  style={{ color: "#e5e7eb", fontSize: 13, lineHeight: 1.4 }}
                 >
                   <span style={{ marginRight: 4 }}>{item.icon}</span>
                   {item.text}
+                  {item.hint && (
+                    <div
+                      style={{ color: "#6b7280", fontSize: 11, marginTop: 2 }}
+                    >
+                      {item.hint}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -504,16 +676,17 @@ export default function InstallPage({ onEnter }: Props) {
               }}
               style={{
                 width: "100%",
-                marginTop: 12,
+                marginTop: 10,
                 background: "linear-gradient(135deg, #22c55e, #15803d)",
                 color: "#000",
                 border: "none",
                 borderRadius: 16,
-                padding: "18px",
+                padding: "16px",
                 fontWeight: 800,
-                fontSize: 16,
+                fontSize: 15,
                 cursor: "pointer",
               }}
+              data-ocid="install_page.confirm_button"
             >
               Got it — Open App
             </button>

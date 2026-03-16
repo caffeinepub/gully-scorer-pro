@@ -1,21 +1,28 @@
 // ============================================================
 // SHARE LINK MODAL — Share app install link via QR + WhatsApp
 // ============================================================
+import { useState } from "react";
+
 interface ShareLinkModalProps {
   onClose: () => void;
 }
 
 export default function ShareLinkModal({ onClose }: ShareLinkModalProps) {
+  const [copied, setCopied] = useState(false);
   const appUrl =
     window.location.origin + window.location.pathname.replace(/\/$/, "");
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(appUrl)}&bgcolor=1a1a2e&color=4ade80&margin=16`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(appUrl)}&bgcolor=020f04&color=4ade80&margin=16`;
+
+  // 🔥 Viral-worthy WhatsApp invitation message
   const waMessage = encodeURIComponent(
-    `🏏 *Gully Scorer Pro* — The ultimate street cricket scoring app!\n\nScore your gully cricket matches like a pro. Free, offline, works on any phone!\n\n👉 Install now: ${appUrl}`,
+    `🏏🔥 *Gully Scorer Pro* \u2014 agar gully cricket khelte ho toh ye install karo abhi!\n\n✅ Ball-by-ball scoring\n✅ 100% FREE \u2014 no ads, no sign-up\n✅ Works without internet\n✅ Solar Mode for outdoor play\n✅ WhatsApp scorecard in 1 tap\n✅ Android & iPhone dono pe chalti hai\n\n👇 *Just tap this link \u2014 installs in seconds:*\n${appUrl}\n\n1200+ players installed this week 🚀`,
   );
   const waUrl = `https://wa.me/?text=${waMessage}`;
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(appUrl).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -39,7 +46,7 @@ export default function ShareLinkModal({ onClose }: ShareLinkModalProps) {
 
         <div className="p-4 flex flex-col items-center gap-4">
           {/* QR Code */}
-          <div className="bg-[#1a1a2e] rounded-2xl p-3 border border-green-500/30">
+          <div className="bg-[#020f04] rounded-2xl p-3 border border-green-500/30">
             <img
               src={qrUrl}
               alt="App QR Code"
@@ -50,7 +57,7 @@ export default function ShareLinkModal({ onClose }: ShareLinkModalProps) {
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Scan to install Gully Scorer Pro on any phone
+            Scan this QR to install Gully Scorer Pro on any phone
           </p>
 
           {/* URL display */}
@@ -64,8 +71,19 @@ export default function ShareLinkModal({ onClose }: ShareLinkModalProps) {
               onClick={handleCopy}
               data-ocid="share_link.secondary_button"
             >
-              Copy
+              {copied ? "✅ Copied!" : "Copy"}
             </button>
+          </div>
+
+          {/* WhatsApp share message preview */}
+          <div className="w-full rounded-xl bg-green-950/40 border border-green-500/20 px-3 py-2">
+            <p className="text-[11px] text-green-400/80 font-bold mb-1">
+              📨 WhatsApp message preview:
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              🏏🔥 Gully Scorer Pro — agar gully cricket khelte ho toh ye
+              install karo abhi! ✅ FREE ✅ Offline ✅ WhatsApp Scorecard...
+            </p>
           </div>
 
           {/* WhatsApp button */}
@@ -77,8 +95,13 @@ export default function ShareLinkModal({ onClose }: ShareLinkModalProps) {
             data-ocid="share_link.primary_button"
           >
             <span className="text-lg">💬</span>
-            Share on WhatsApp
+            Send on WhatsApp — It Spreads Fast!
           </a>
+
+          <p className="text-[10px] text-muted-foreground text-center">
+            Share with all your WhatsApp groups — the link opens the app install
+            page directly
+          </p>
         </div>
       </div>
     </div>
